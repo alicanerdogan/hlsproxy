@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stream Free</title>
+
+    <link
+      href="https://unpkg.com/video.js/dist/video-js.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    #my-player {
+      height: 100vh;
+      width: 100vw;
+    }
+  </style>
+  <script>
+    window.HELP_IMPROVE_VIDEOJS = false;
+  </script>
+  <script src="https://unpkg.com/video.js/dist/video.min.js"></script>
+  <body>
+    <video
+      id="my-player"
+      class="video-js"
+      controls
+      preload="auto"
+      width="640"
+      height="480"
+      crossorigin="anonymous"
+    >
+      <source id="source" type="application/x-mpegURL" />
+    </video>
+  </body>
+  <script>
+    function init() {
+      const sources = [
+        {
+          url: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8",
+        },
+        {
+          url: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8",
+        },
+        {
+          url: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.mp4/.m3u8",
+        },
+        {
+          url: "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8",
+        },
+        {
+          url: "https://moctobpltc-i.akamaihd.net/hls/live/571329/eight/playlist.m3u8",
+        },
+        {
+          url: "https://d3rlna7iyyu8wu.cloudfront.net/skip_armstrong/skip_armstrong_stereo_subs.m3u8",
+        },
+        {
+          url: "https://d3rlna7iyyu8wu.cloudfront.net/skip_armstrong/skip_armstrong_multichannel_subs.m3u8",
+        },
+        {
+          url: "http://amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest(format=m3u8-aapl)",
+        },
+        {
+          url: "http://amssamples.streaming.mediaservices.windows.net/69fbaeba-8e92-4740-aedc-ce09ae945073/AzurePromo.ism/manifest(format=m3u8-aapl)",
+        },
+        {
+          url: "http://amssamples.streaming.mediaservices.windows.net/634cd01c-6822-4630-8444-8dd6279f94c6/CaminandesLlamaDrama4K.ism/manifest(format=m3u8-aapl)",
+        },
+        {
+          url: "https://d3rlna7iyyu8wu.cloudfront.net/skip_armstrong/skip_armstrong_multi_language_subs.m3u8",
+        },
+        {
+          url: "https://ed-t1.edghst.me/plyvivo/ze6ag0narapagu202afe/chunklist.m3u8",
+          headers: {
+            "User-Agent":
+              "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0",
+            Referer: "https://www.nolive.me/",
+          },
+        },
+        {
+          url: "https://xwssgs.1stream.one/scripts/OTM0NQ==/caxi.m3u8",
+          headers: {
+            "User-Agent":
+              "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0",
+            Referer: "https://1stream.eu/",
+          },
+        },
+      ];
+
+      const sourceIndex = Number.parseInt(
+        new URLSearchParams(window.location.search).get("videoId")
+      );
+      const noProxy = !!new URLSearchParams(window.location.search).get(
+        "noProxy"
+      );
+      if (Number.isNaN(sourceIndex) || !sources[sourceIndex]) {
+        return;
+      }
+      const source = sources[sourceIndex];
+      const encodedSrc =
+        "http://localhost:8080/proxy/" + btoa(JSON.stringify(source));
+      document.getElementById("source").src = noProxy ? source.url : encodedSrc;
+      const options = {};
+
+      const player = videojs("my-player", options, function onPlayerReady() {
+        videojs.log("Your player is ready!");
+
+        // In this context, `this` is the player that was created by Video.js.
+        this.play();
+
+        // How about an event listener?
+        this.on("ended", function () {
+          videojs.log("Awww...over so soon?!");
+        });
+      });
+    }
+    init();
+  </script>
+</html>
